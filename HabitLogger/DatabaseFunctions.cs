@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HabbitLogger;
 
@@ -8,8 +9,8 @@ internal class DatabaseFunctions
     internal void CreateTable(string table_name)
     {
         List<string> tables = new();
-        
-        using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
+
+        using (var connection = new SqliteConnection($"Data Source='habit_logger.db'"))
         {
             connection.Open();
 
@@ -33,12 +34,12 @@ internal class DatabaseFunctions
                         CREATE TABLE {table_name} (
                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                             name TEXT NOT NULL,
-                            quantity_goal INTEGER NOT NULL,
+                            quantity_goal DOUBLE NOT NULL,
                             unit TEXT NOT NULL
                         );
                         
-                        INSERT INTO {table_name} (name, quantity_goal, unit)
-                        VALUES ('drink water', 4, 'lts')
+                        INSERT INTO habit (name, quantity_goal, unit)
+                        values ('Insert new habit type', 0, 'habit')
                     ";
                 }
                 else if (table_name == "habit_log")
@@ -48,7 +49,7 @@ internal class DatabaseFunctions
                         CREATE TABLE {table_name} (
                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                             name TEXT NOT NULL,
-                            quantity INTEGER NOT NULL,
+                            quantity DOUBLE NOT NULL,
                             goal_achieved BOOLEAN NOT NULL,
                             date DATE NOT NULL
                         );
@@ -60,7 +61,12 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void InsertHabitLog()
+    internal void GetTableRecords()
+    {
+
+    }
+
+    internal void InsertHabitLog(string name, double quantity, bool goalAchieved, DateTime date)
     {
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
@@ -70,25 +76,20 @@ internal class DatabaseFunctions
 
             command.CommandText =
             @"
-                INSERT INTO habit (name, quantity, goal_achieved, date)
+                INSERT INTO habit_log (name, quantity, goal_achieved, date)
                 values (@Name, @Quantity, @Goal_achieved, @Date)
             ";
 
-            command.Parameters.AddWithValue("@Name", "");
-            command.Parameters.AddWithValue("@Quantity", "");
-            command.Parameters.AddWithValue("@Goal_achieved", "");
-            command.Parameters.AddWithValue("@Date", "");
+            command.Parameters.AddWithValue("@Name", name);
+            command.Parameters.AddWithValue("@Quantity", quantity);
+            command.Parameters.AddWithValue("@Goal_achieved", goalAchieved);
+            command.Parameters.AddWithValue("@Date", date);
 
             command.ExecuteNonQuery();
         }
     }
 
-    internal void DeleteHabitLog()
-    {
-
-    }
-
-    internal void InsertHabit()
+    internal void InsertHabitType(string name, double quantityGoal, string unit) // Que este metodo tenga parametros con los valores que se van a agregar a la base de datos
     {
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
@@ -102,11 +103,45 @@ internal class DatabaseFunctions
                 values (@Name, @Quantity_goal, @Unit)
             ";
 
-            command.Parameters.AddWithValue("@Name", "");
-            command.Parameters.AddWithValue("@Quantity_goal", "");
-            command.Parameters.AddWithValue("@Unit", "");
+            command.Parameters.AddWithValue("@Name", name);
+            command.Parameters.AddWithValue("@Quantity_goal", quantityGoal);
+            command.Parameters.AddWithValue("@Unit", unit);
 
             command.ExecuteNonQuery();
         }
+    }
+
+    internal void UpdateHabits(double quantity, bool goalAchieved, DateTime date)
+    {
+        
+    }
+
+    internal void DeleteHabitLog()
+    {
+
+    }
+
+    internal List<string> ReadHabits(string column)
+    {
+        List<string> habits = new();
+
+        using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+
+            command.CommandText = $"SELECT {column} FROM habit;";
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    habits.Add(reader.GetString(0));
+                }
+            }
+        }
+
+        return habits;
     }
 }
