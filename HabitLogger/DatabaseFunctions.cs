@@ -111,7 +111,7 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void UpdateHabitLog(double quantity, bool goalAchieved, DateTime date)
+    internal void UpdateHabitLog(string name, double quantity, bool goalAchieved, DateTime date)
     {
         using (var connection = new SqliteConnection("Data Soruce=habit_logger.db"))
         {
@@ -163,5 +163,36 @@ internal class DatabaseFunctions
         }
 
         return habits;
+    }
+
+    internal List<(string, double)> ReadHabitLogs(string habit)
+    {
+        List<(string, double)> logs = new();
+
+        using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+            @"
+                SELECT name, quantity
+                FROM habit_log
+                WHERE name = @Name
+            ";
+
+            command.Parameters.AddWithValue("@Name", habit);
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    logs.Add((reader.GetString(0), reader.GetDouble(1)));
+                }
+            }
+        }
+
+        return logs;
     }
 }
