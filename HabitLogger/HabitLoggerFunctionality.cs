@@ -1,5 +1,4 @@
 ﻿using HabbitLogger;
-using System.Runtime.CompilerServices;
 
 namespace HabitLogger;
 

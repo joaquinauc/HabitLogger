@@ -41,7 +41,7 @@ internal class HabitInterface
         }
     }
 
-    internal void InsertHabitLog(string name)
+    internal void InsertAndUpdateHabitLog(string name, string insertUpdateOption)
     {
         Console.Clear();
 
@@ -84,7 +84,14 @@ internal class HabitInterface
         else
         {
             // Crear una metodo en Helpers para dar formato a la fecha
-            databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+            if (insertUpdateOption == "insert")
+            {
+                databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+            }
+            else if (insertUpdateOption == "update")
+            {
+
+            }
         }
     }
 
@@ -118,11 +125,7 @@ internal class HabitInterface
     {
         Console.Clear();
 
-        var habitSelected = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-            .Title("Select which habit type you wish to insert from")
-            .AddChoices(databaseFunctions.ReadHabits("name"))
-        );
+        string habitSelected = SelectHabit();
 
         if (habitSelected == "Insert new habit type")
         {   // Mandar a llamar a una función para recopilar los datos necesarios para insertar un nuevo hábito, o hacerlos aqui mismo
@@ -132,7 +135,25 @@ internal class HabitInterface
 
         else
         {
-            InsertHabitLog(habitSelected);
+            InsertAndUpdateHabitLog(habitSelected, "insert");
         }
+    }
+
+    internal void UpdateHabitLog()
+    {
+        Console.Clear();
+
+
+    }
+
+    internal string SelectHabit()
+    {
+        var habitSelected = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Select which habit type you wish to insert from")
+            .AddChoices(databaseFunctions.ReadHabits("name"))
+        );
+
+        return habitSelected;
     }
 }
