@@ -111,7 +111,7 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void UpdateHabits(double quantity, bool goalAchieved, DateTime date)
+    internal void UpdateHabitLog(double quantity, bool goalAchieved, DateTime date)
     {
         using (var connection = new SqliteConnection("Data Soruce=habit_logger.db"))
         {
