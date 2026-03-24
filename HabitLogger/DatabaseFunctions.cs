@@ -113,7 +113,27 @@ internal class DatabaseFunctions
 
     internal void UpdateHabits(double quantity, bool goalAchieved, DateTime date)
     {
-        
+        using (var connection = new SqliteConnection("Data Soruce=habit_logger.db"))
+        {
+            connection.Open();
+
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+            @"
+                UPDATE habit_log
+                SET quantity = @Quantity,
+                    goal_achieved = @Goal_achieved,
+                    date = @Date
+                WHERE name = @Name
+            ";
+
+            command.Parameters.AddWithValue("@Quantity", quantity);
+            command.Parameters.AddWithValue("@Goal_achieved", goalAchieved);
+            command.Parameters.AddWithValue("@Date", date);
+
+            command.ExecuteNonQuery();
+        }
     }
 
     internal void DeleteHabitLog()
