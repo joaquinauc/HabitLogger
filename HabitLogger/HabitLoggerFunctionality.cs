@@ -8,4 +8,14 @@ internal class HabitLoggerFunctionality
     {
         habitInterface.InsertMenu();
     }
+
+    internal void UpdateHabitLog(HabitInterface habitinterface)
+    {
+        habitinterface.UpdateHabitLog();
+    }
+
+    internal void ReadHabitLogs(HabitInterface habitInterface)
+    {
+        habitInterface.ReadHabitLogs();
+    }
 }

@@ -31,9 +31,11 @@ internal class HabitInterface
                 break;
 
             case MainMenuOptions.UpdateRecord:
+                habitLoggerFunctionality.UpdateHabitLog(this);
                 break;
 
             case MainMenuOptions.ViewAllRecords:
+                habitLoggerFunctionality.ReadHabitLogs(this);
                 break;
 
             default:
@@ -90,7 +92,7 @@ internal class HabitInterface
             }
             else if (insertUpdateOption == "update")
             {
-
+            
             }
         }
     }
@@ -139,11 +141,25 @@ internal class HabitInterface
         }
     }
 
+    internal void ReadHabitLogs()
+    {
+        Console.Clear();
+
+        string habitSelected = SelectHabit();
+
+        var logSelected = AnsiConsole.Prompt(
+            new SelectionPrompt<(string, double)>()
+            .AddChoices(databaseFunctions.ReadHabitLogs(habitSelected))
+        );
+    }
+
     internal void UpdateHabitLog()
     {
         Console.Clear();
 
+        string habitSelected = SelectHabit();
 
+        InsertAndUpdateHabitLog(habitSelected, "update");
     }
 
     internal string SelectHabit()
