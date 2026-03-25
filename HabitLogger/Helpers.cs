@@ -114,12 +114,12 @@ namespace HabitLogger
             logsTable.AddColumn("ID");
             logsTable.AddColumn("Name");
             logsTable.AddColumn("Quantity");
-            logsTable.AddColumn("Goal Achieved");
+            logsTable.AddColumn("Goal");
             logsTable.AddColumn("Date");
 
             for (int i = 0; i < logs.Count(); i++)
             {
-                logsTable.AddRow(logs[i].Item1.ToString(), logs[i].Item2, logs[i].Item3.ToString("F2"), logs[i].Item4 ? "✔" : "✘", logs[i].Item5.ToString("yyyy-MM-dd"));
+                logsTable.AddRow(logs[i].Item1.ToString(), logs[i].Item2, logs[i].Item3.ToString("F2"), logs[i].Item4 ? "[green]OK[/]" : "[red]X[/]", logs[i].Item5.ToString("yyyy-MM-dd"));
             }
 
             return logsTable;

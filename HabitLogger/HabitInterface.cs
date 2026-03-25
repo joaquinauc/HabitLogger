@@ -151,10 +151,9 @@ internal class HabitInterface
 
         if (logs.Count > 0)
         {
-            var logSelected = AnsiConsole.Prompt(
-                new SelectionPrompt<(int, string, double, bool, DateTime)>()
-                .AddChoices(logs)
-            );
+            Table logsTable = helpers.GetLogsTable(logs);
+
+            AnsiConsole.Write(logsTable);
         }
         else
         {
