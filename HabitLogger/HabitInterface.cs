@@ -127,7 +127,7 @@ internal class HabitInterface
     {
         Console.Clear();
 
-        string habitSelected = SelectHabit();
+        string habitSelected = SelectHabit("insert");
 
         if (habitSelected == "Insert new habit type")
         {   // Mandar a llamar a una función para recopilar los datos necesarios para insertar un nuevo hábito, o hacerlos aqui mismo
@@ -162,12 +162,21 @@ internal class HabitInterface
         InsertAndUpdateHabitLog(habitSelected, "update");
     }
 
-    internal string SelectHabit()
+    internal string SelectHabit(string choice="")
     {
+        List<string> habits = new();
+
+        if (choice == "insert")
+        {
+            habits.Add("Insert new habit type");
+        }
+
+        habits.AddRange(databaseFunctions.ReadHabits("name"));
+
         var habitSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("Select which habit type you wish to insert from")
-            .AddChoices(databaseFunctions.ReadHabits("name"))
+            .AddChoices(habits)
         );
 
         return habitSelected;

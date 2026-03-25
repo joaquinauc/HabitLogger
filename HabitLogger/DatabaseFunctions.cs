@@ -37,9 +37,6 @@ internal class DatabaseFunctions
                             quantity_goal DOUBLE NOT NULL,
                             unit TEXT NOT NULL
                         );
-                        
-                        INSERT INTO habit (name, quantity_goal, unit)
-                        values ('Insert new habit type', 0, 'habit')
                     ";
                 }
                 else if (table_name == "habit_log")
