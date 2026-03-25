@@ -147,12 +147,12 @@ internal class HabitInterface
 
         string habitSelected = SelectHabit();
 
-        List<(string, double)> logs = databaseFunctions.ReadHabitLogs(habitSelected);
+        List<(int, string, double, bool, DateTime)> logs = databaseFunctions.ReadHabitLogs(habitSelected);
 
         if (logs.Count > 0)
         {
             var logSelected = AnsiConsole.Prompt(
-                new SelectionPrompt<(string, double)>()
+                new SelectionPrompt<(int, string, double, bool, DateTime)>()
                 .AddChoices(logs)
             );
         }

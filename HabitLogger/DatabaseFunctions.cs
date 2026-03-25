@@ -162,9 +162,9 @@ internal class DatabaseFunctions
         return habits;
     }
 
-    internal List<(string, double)> ReadHabitLogs(string habit)
+    internal List<(int, string, double, bool, DateTime)> ReadHabitLogs(string habit)
     {
-        List<(string, double)> logs = new();
+        List<(int, string, double, bool, DateTime)> logs = new();
 
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
@@ -174,7 +174,7 @@ internal class DatabaseFunctions
 
             command.CommandText =
             @"
-                SELECT name, quantity
+                SELECT id, name, quantity, goal_achieved, date
                 FROM habit_log
                 WHERE name = @Name
             ";
@@ -185,7 +185,7 @@ internal class DatabaseFunctions
             {
                 while (reader.Read())
                 {
-                    logs.Add((reader.GetString(0), reader.GetDouble(1)));
+                    logs.Add((reader.GetInt16(0), reader.GetString(1), reader.GetDouble(2), reader.GetBoolean(3), reader.GetDateTime(4)));
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using HabbitLogger;
+using Spectre.Console;
 using System.Globalization;
 
 namespace HabitLogger
@@ -98,13 +99,30 @@ namespace HabitLogger
             return date;
         }
 
-        
         internal bool GoalAchieved(double quantityGoal, double quantity)
         {
             if (quantity >= quantityGoal)
                 return true;
             else
                 return false;
+        }
+
+        internal Table GetLogsTable(List<(int, string, double, bool, DateTime)> logs)
+        {
+            Table logsTable = new Table();
+
+            logsTable.AddColumn("ID");
+            logsTable.AddColumn("Name");
+            logsTable.AddColumn("Quantity");
+            logsTable.AddColumn("Goal Achieved");
+            logsTable.AddColumn("Date");
+
+            for (int i = 0; i < logs.Count(); i++)
+            {
+                logsTable.AddRow(logs[i].Item1.ToString(), logs[i].Item2, logs[i].Item3.ToString("F2"), logs[i].Item4 ? "✔" : "✘", logs[i].Item5.ToString("yyyy-MM-dd"));
+            }
+
+            return logsTable;
         }
     }
 }
