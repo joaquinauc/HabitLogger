@@ -147,10 +147,19 @@ internal class HabitInterface
 
         string habitSelected = SelectHabit();
 
-        var logSelected = AnsiConsole.Prompt(
-            new SelectionPrompt<(string, double)>()
-            .AddChoices(databaseFunctions.ReadHabitLogs(habitSelected))
-        );
+        List<(string, double)> logs = databaseFunctions.ReadHabitLogs(habitSelected);
+
+        if (logs.Count > 0)
+        {
+            var logSelected = AnsiConsole.Prompt(
+                new SelectionPrompt<(string, double)>()
+                .AddChoices(logs)
+            );
+        }
+        else
+        {
+            Console.WriteLine("There's no logs registered in this habit!");
+        }
     }
 
     internal void UpdateHabitLog()
