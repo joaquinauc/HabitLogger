@@ -43,7 +43,7 @@ internal class HabitInterface
         }
     }
 
-    internal void InsertAndUpdateHabitLog(string name, string insertUpdateOption)
+    internal void InsertHabitLog(string name)
     {
         Console.Clear();
 
@@ -86,14 +86,7 @@ internal class HabitInterface
         else
         {
             // Crear una metodo en Helpers para dar formato a la fecha
-            if (insertUpdateOption == "insert")
-            {
-                databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
-            }
-            else if (insertUpdateOption == "update")
-            {
-            
-            }
+            databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
         }
     }
 
@@ -137,15 +130,16 @@ internal class HabitInterface
 
         else
         {
-            InsertAndUpdateHabitLog(habitSelected, "insert");
+            InsertHabitLog(habitSelected);
         }
     }
 
-    internal void ReadHabitLogs()
+    internal int ReadHabitLogs(string choice="")
     {
         Console.Clear();
 
         string habitSelected = SelectHabit();
+        int logToUpdate = 0;
 
         List<(int, string, double, bool, DateTime)> logs = databaseFunctions.ReadHabitLogs(habitSelected);
 
@@ -154,20 +148,27 @@ internal class HabitInterface
             Table logsTable = helpers.GetLogsTable(logs);
 
             AnsiConsole.Write(logsTable);
+            Console.WriteLine();
+
+            if (choice == "update" || choice == "delete")
+            {
+                do
+                {
+                    logToUpdate = AnsiConsole.Ask<int>("Choose an ID for the log you want to update (0 < x): ");
+                } while (logToUpdate <= 0);
+            }
         }
         else
         {
             Console.WriteLine("There's no logs registered in this habit!");
         }
+
+        return logToUpdate;
     }
 
     internal void UpdateHabitLog()
     {
-        Console.Clear();
-
-        string habitSelected = SelectHabit();
-
-        InsertAndUpdateHabitLog(habitSelected, "update");
+        ReadHabitLogs("update");
     }
 
     internal string SelectHabit(string choice="")
