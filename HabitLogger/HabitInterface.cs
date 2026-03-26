@@ -43,8 +43,15 @@ internal class HabitInterface
         }
     }
 
-    internal void InsertHabitLog(string name)
+    internal void InsertAndUpdateHabitLog(string name, bool isInsert)
     {
+        var logsRead = (0, new List<(int, string, double, bool, DateTime)>());
+
+        if (!isInsert)
+        {
+            logsRead = ReadHabitLogs("update");
+        }
+
         Console.Clear();
 
         // Solo la cantidad hecha y la fecha, porque el nombre es el del habito que nomas se le pasa como valor, y si se logró o no es una comparación
@@ -86,7 +93,19 @@ internal class HabitInterface
         else
         {
             // Crear una metodo en Helpers para dar formato a la fecha
-            databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+            if (isInsert)
+            {
+                databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed), 
+                    helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+            }
+            else
+            {
+                var logSelected = logsRead.Item1;
+                var logs = logsRead.Item2;
+
+                databaseFunctions.UpdateHabitLog(logs[logSelected].Item1, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(logs[logSelected].Item2), 
+                    quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+            }
         }
     }
 
@@ -130,11 +149,11 @@ internal class HabitInterface
 
         else
         {
-            InsertHabitLog(habitSelected);
+            InsertAndUpdateHabitLog(habitSelected, true);
         }
     }
 
-    internal int ReadHabitLogs(string choice="")
+    internal (int, List<(int, string, double, bool, DateTime)>) ReadHabitLogs(string choice="")
     {
         Console.Clear();
 
@@ -154,8 +173,8 @@ internal class HabitInterface
             {
                 do
                 {
-                    logToUpdate = AnsiConsole.Ask<int>("Choose an ID for the log you want to update (0 < x): ");
-                } while (logToUpdate <= 0);
+                    logToUpdate = AnsiConsole.Ask<int>("Choose an ID for the log you want to update [yellow](0 < x < quantityOfLogs)[/]: ");
+                } while (logToUpdate <= 0 || logToUpdate > logs.Count);
             }
         }
         else
@@ -163,12 +182,12 @@ internal class HabitInterface
             Console.WriteLine("There's no logs registered in this habit!");
         }
 
-        return logToUpdate;
+        return (logToUpdate - 1, logs);
     }
 
     internal void UpdateHabitLog()
     {
-        ReadHabitLogs("update");
+        InsertAndUpdateHabitLog("N/A", false);
     }
 
     internal string SelectHabit(string choice="")

@@ -108,9 +108,9 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void UpdateHabitLog(string name, double quantity, bool goalAchieved, DateTime date)
+    internal void UpdateHabitLog(int id, double quantity, bool goalAchieved, DateTime date)
     {
-        using (var connection = new SqliteConnection("Data Soruce=habit_logger.db"))
+        using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
             connection.Open();
 
@@ -122,12 +122,13 @@ internal class DatabaseFunctions
                 SET quantity = @Quantity,
                     goal_achieved = @Goal_achieved,
                     date = @Date
-                WHERE name = @Name
+                WHERE id = @Id
             ";
 
             command.Parameters.AddWithValue("@Quantity", quantity);
             command.Parameters.AddWithValue("@Goal_achieved", goalAchieved);
             command.Parameters.AddWithValue("@Date", date);
+            command.Parameters.AddWithValue("@Id", id);
 
             command.ExecuteNonQuery();
         }
