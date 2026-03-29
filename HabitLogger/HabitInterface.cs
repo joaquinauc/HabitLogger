@@ -28,6 +28,7 @@ internal class HabitInterface
                 break;
 
             case MainMenuOptions.DeleteRecord:
+                habitLoggerFunctionality.DeleteHabitLog(this);
                 break;
 
             case MainMenuOptions.UpdateRecord:
@@ -43,13 +44,13 @@ internal class HabitInterface
         }
     }
 
-    internal void InsertAndUpdateHabitLog(string name, bool isInsert)
+    internal void InsertUpdateHabitLog(string name, bool isInsert)
     {
         var logsRead = (0, new List<(int, string, double, bool, DateTime)>());
 
         if (!isInsert)
         {
-            logsRead = ReadHabitLogs("update");
+            logsRead = ReadHabitLogs(false);
         }
 
         Console.Clear();
@@ -92,10 +93,12 @@ internal class HabitInterface
         }
         else
         {
+            
+
             // Crear una metodo en Helpers para dar formato a la fecha
             if (isInsert)
             {
-                databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed), 
+                databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed),
                     helpers.FormatDate(yearParsed, monthParsed, dayParsed));
             }
             else
@@ -103,7 +106,7 @@ internal class HabitInterface
                 var logSelected = logsRead.Item1;
                 var logs = logsRead.Item2;
 
-                databaseFunctions.UpdateHabitLog(logs[logSelected].Item1, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(logs[logSelected].Item2), 
+                databaseFunctions.UpdateHabitLog(logs[logSelected].Item1, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(logs[logSelected].Item2),
                     quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
             }
         }
@@ -149,11 +152,11 @@ internal class HabitInterface
 
         else
         {
-            InsertAndUpdateHabitLog(habitSelected, true);
+            InsertUpdateHabitLog(habitSelected, true);
         }
     }
 
-    internal (int, List<(int, string, double, bool, DateTime)>) ReadHabitLogs(string choice="")
+    internal (int, List<(int, string, double, bool, DateTime)>) ReadHabitLogs(bool onlyRead)
     {
         Console.Clear();
 
@@ -169,7 +172,7 @@ internal class HabitInterface
             AnsiConsole.Write(logsTable);
             Console.WriteLine();
 
-            if (choice == "update" || choice == "delete")
+            if (onlyRead == false)
             {
                 do
                 {
@@ -187,7 +190,17 @@ internal class HabitInterface
 
     internal void UpdateHabitLog()
     {
-        InsertAndUpdateHabitLog("N/A", false);
+        InsertUpdateHabitLog("N/A", false);
+    }
+
+    internal void DeleteHabitLog()
+    {
+        var logsRead = ReadHabitLogs(false);
+
+        var logSelected = logsRead.Item1;
+        var logs = logsRead.Item2;
+
+        databaseFunctions.DeleteHabitLog(logs[logSelected].Item1);
     }
 
     internal string SelectHabit(string choice="")

@@ -9,13 +9,18 @@ internal class HabitLoggerFunctionality
         habitInterface.InsertMenu();
     }
 
-    internal void UpdateHabitLog(HabitInterface habitinterface)
+    internal void UpdateHabitLog(HabitInterface habitInterface)
     {
-        habitinterface.UpdateHabitLog();
+        habitInterface.UpdateHabitLog();
+    }
+
+    internal void DeleteHabitLog(HabitInterface habitInteface)
+    {
+        habitInteface.DeleteHabitLog();
     }
 
     internal void ReadHabitLogs(HabitInterface habitInterface)
     {
-        habitInterface.ReadHabitLogs();
+        habitInterface.ReadHabitLogs(true);
     }
 }
