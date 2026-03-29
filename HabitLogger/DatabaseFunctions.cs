@@ -134,9 +134,24 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void DeleteHabitLog()
+    internal void DeleteHabitLog(int id)
     {
+        using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
+        {
+            connection.Open();
 
+            var command = connection.CreateCommand();
+
+            command.CommandText =
+            @"
+                DELETE FROM habit_log
+                WHERE id = @Id
+            ";
+
+            command.Parameters.AddWithValue("@Id", id);
+
+            command.ExecuteNonQuery();
+        }
     }
 
     internal List<string> ReadHabits(string column)
