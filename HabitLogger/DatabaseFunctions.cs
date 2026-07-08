@@ -1,6 +1,4 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HabbitLogger;
 
@@ -56,11 +54,6 @@ internal class DatabaseFunctions
                 command.ExecuteNonQuery();
             }
         }
-    }
-
-    internal void GetTableRecords()
-    {
-
     }
 
     internal void InsertHabitLog(string name, double quantity, bool goalAchieved, DateTime date)

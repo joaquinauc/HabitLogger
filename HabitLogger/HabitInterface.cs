@@ -6,9 +6,6 @@ namespace HabbitLogger;
 
 internal class HabitInterface
 {
-    DatabaseFunctions databaseFunctions = new();
-    Helpers helpers = new();
-
     internal void MainMenu()
     {
         Console.Clear();
@@ -19,24 +16,24 @@ internal class HabitInterface
             .AddChoices(Enum.GetValues<MainMenuOptions>())
         );
 
-        HabitLoggerFunctionality habitLoggerFunctionality = new();
+        HabitController habitController = new();
 
         switch (mainMenuOption)
         {
             case MainMenuOptions.InsertRecord:
-                habitLoggerFunctionality.InsertHabitLog(this);
+                habitController.InsertHabitLog();
                 break;
 
             case MainMenuOptions.DeleteRecord:
-                habitLoggerFunctionality.DeleteHabitLog(this);
+                habitController.DeleteHabitLog();
                 break;
 
             case MainMenuOptions.UpdateRecord:
-                habitLoggerFunctionality.UpdateHabitLog(this);
+                habitController.UpdateHabitLog();
                 break;
 
             case MainMenuOptions.ViewAllRecords:
-                habitLoggerFunctionality.ReadHabitLogs(this);
+                habitController.ReadHabitLogs(onlyRead: true);
                 break;
 
             default:
@@ -44,75 +41,29 @@ internal class HabitInterface
         }
     }
 
-    internal void InsertUpdateHabitLog(string name, bool isInsert)
+    internal (string?, string?, string?, string?) InsertUpdateHabitLogPrompt()
     {
-        var logsRead = (0, new List<(int, string, double, bool, DateTime)>());
-
-        if (!isInsert)
-        {
-            logsRead = ReadHabitLogs(false);
-        }
-
         Console.Clear();
-
-        // Solo la cantidad hecha y la fecha, porque el nombre es el del habito que nomas se le pasa como valor, y si se logró o no es una comparación
 
         Console.Write("Insert the quantity you achieved of this habit: ");
         string quantity = Console.ReadLine();
 
-        double.TryParse(quantity, out double quantityParsed);
-
         Console.Clear();
-
-        // if *Parsed == 0 sería la condición de error para la fecha
-        // Hacer las funciones de año bisiesto, y fecha invalida en Helpers
-        // Estas funciones, ver la manera que todas corran en Helpers
 
         Console.WriteLine("Please, insert the date this habit was done:");
         Console.Write("Year: ");
         string? year = Console.ReadLine();
 
-        int.TryParse(year, out int yearParsed);
-
         Console.Write("Month (1-12): ");
         string? month = Console.ReadLine();
-
-        int.TryParse(month, out int monthParsed);
 
         Console.Write("Day: ");
         string? day = Console.ReadLine();
 
-        int.TryParse(day, out int dayParsed);
-
-        if (yearParsed == 0 || monthParsed == 0 || dayParsed == 0 || helpers.InvalidDateCheck(yearParsed, monthParsed, dayParsed, helpers.LeapYear(yearParsed)))
-        {
-            Console.Clear();
-            Console.WriteLine("The inserted date is invalid, please try again.");
-            Console.WriteLine("Press Enter to continue...");
-            Console.ReadLine();
-        }
-        else
-        {
-            
-
-            // Crear una metodo en Helpers para dar formato a la fecha
-            if (isInsert)
-            {
-                databaseFunctions.InsertHabitLog(name, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(name), quantityParsed),
-                    helpers.FormatDate(yearParsed, monthParsed, dayParsed));
-            }
-            else
-            {
-                var logSelected = logsRead.Item1;
-                var logs = logsRead.Item2;
-
-                databaseFunctions.UpdateHabitLog(logs[logSelected].Item1, quantityParsed, helpers.GoalAchieved(helpers.GetQuantityGoal(logs[logSelected].Item2),
-                    quantityParsed), helpers.FormatDate(yearParsed, monthParsed, dayParsed));
-            }
-        }
+        return (quantity, year, month, day);
     }
 
-    internal void InsertHabitType()
+    internal (string?, string?, string?) InsertNewHabitPrompt()
     {
         Console.Clear();
 
@@ -125,49 +76,29 @@ internal class HabitInterface
         Console.Write("Insert a unit this goal is going to be measured with: ");
         string? unit = Console.ReadLine();
 
-        if (!double.TryParse(quantityGoal, out double quantity) || name == "" || unit == "") // Maybe ponerla en otra clase, porque se me hace que aqui no va
-        {
-            Console.Clear();
-            Console.WriteLine("The inserted data is invalid, please try again.");
-            Console.WriteLine("Press Enter to continue...");
-            Console.ReadLine();
-        }
-        else
-        {
-            databaseFunctions.InsertHabitType(name, quantity, unit);
-        }
+        return (name, quantityGoal, unit);
     }
 
-    internal void InsertMenu()
+    internal int ShowHabitLogsTable(bool onlyRead, List<(int, string, double, bool, DateTime)> logs)
     {
         Console.Clear();
 
-        string habitSelected = SelectHabit("insert");
-
-        if (habitSelected == "Insert new habit type")
-        {   // Mandar a llamar a una función para recopilar los datos necesarios para insertar un nuevo hábito, o hacerlos aqui mismo
-            // Se puede hacer una mini interfaz en esta clase para recopilar esos datos, y luego pasar esos datos a la función InsertHabit en DatabaseFunctions
-            InsertHabitType(); //Pasar argumentos con los valores que se van a agregar a la base de datos
-        }
-
-        else
-        {
-            InsertUpdateHabitLog(habitSelected, true);
-        }
-    }
-
-    internal (int, List<(int, string, double, bool, DateTime)>) ReadHabitLogs(bool onlyRead)
-    {
-        Console.Clear();
-
-        string habitSelected = SelectHabit();
         int logToUpdate = 0;
-
-        List<(int, string, double, bool, DateTime)> logs = databaseFunctions.ReadHabitLogs(habitSelected);
 
         if (logs.Count > 0)
         {
-            Table logsTable = helpers.GetLogsTable(logs);
+            Table logsTable = new Table();
+
+            logsTable.AddColumn("ID");
+            logsTable.AddColumn("Name");
+            logsTable.AddColumn("Quantity");
+            logsTable.AddColumn("Goal");
+            logsTable.AddColumn("Date");
+
+            for (int i = 0; i < logs.Count(); i++)
+            {
+                logsTable.AddRow((i + 1).ToString(), logs[i].Item2, logs[i].Item3.ToString("F2"), logs[i].Item4 ? "[green]OK[/]" : "[red]X[/]", logs[i].Item5.ToString("yyyy-MM-dd"));
+            }
 
             AnsiConsole.Write(logsTable);
             Console.WriteLine();
@@ -185,35 +116,11 @@ internal class HabitInterface
             Console.WriteLine("There's no logs registered in this habit!");
         }
 
-        return (logToUpdate - 1, logs);
+        return logToUpdate - 1;
     }
 
-    internal void UpdateHabitLog()
+    internal string SelectHabitPrompt(List<string> habits)
     {
-        InsertUpdateHabitLog("N/A", false);
-    }
-
-    internal void DeleteHabitLog()
-    {
-        var logsRead = ReadHabitLogs(false);
-
-        var logSelected = logsRead.Item1;
-        var logs = logsRead.Item2;
-
-        databaseFunctions.DeleteHabitLog(logs[logSelected].Item1);
-    }
-
-    internal string SelectHabit(string choice="")
-    {
-        List<string> habits = new();
-
-        if (choice == "insert")
-        {
-            habits.Add("Insert new habit type");
-        }
-
-        habits.AddRange(databaseFunctions.ReadHabits("name"));
-
         var habitSelected = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
             .Title("Select which habit type you wish to insert from")
@@ -221,5 +128,13 @@ internal class HabitInterface
         );
 
         return habitSelected;
+    }
+
+    internal void InvalidInputPrompt(string input)
+    {
+        Console.Clear();
+        Console.WriteLine($"The inserted {input} is invalid, please try again.");
+        Console.WriteLine("Press Enter to continue...");
+        Console.ReadLine();
     }
 }
