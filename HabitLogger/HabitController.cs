@@ -36,12 +36,16 @@ internal class HabitController
         else
         {
             InsertUpdateHabitLog(name: habitSelected, isInsert: true);
+
+            habitInterface.SuccessPrompt(input: "inserted");
         }
     }
 
     internal void UpdateHabitLog()
     {
         InsertUpdateHabitLog(name: "", isInsert: false);
+
+        habitInterface.SuccessPrompt(input: "updated");
     }
 
     internal void DeleteHabitLog()
@@ -56,7 +60,10 @@ internal class HabitController
         {
             var logSelected = logsRead.Item1;
             var logs = logsRead.Item2;
+
             databaseFunctions.DeleteHabitLog(id: logs[logSelected].Item1);
+
+            habitInterface.SuccessPrompt(input: "deleted");
         }
     }
 

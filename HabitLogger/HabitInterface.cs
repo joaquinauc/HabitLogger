@@ -52,17 +52,32 @@ internal class HabitInterface
 
         Console.Clear();
 
-        Console.WriteLine("Please, insert the date this habit was done:");
-        Console.Write("Year: ");
-        string? year = Console.ReadLine();
+        var isToday = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Do you want to insert today's date?")
+            .AddChoices(["Yes", "No"])
+        );
 
-        Console.Write("Month (1-12): ");
-        string? month = Console.ReadLine();
+        Console.Clear();
 
-        Console.Write("Day: ");
-        string? day = Console.ReadLine();
+        if (isToday == "Yes")
+        {
+            return (quantity, DateTime.Now.Year.ToString(), DateTime.Now.Month.ToString(), DateTime.Now.Day.ToString());
+        }
+        else
+        {
+            Console.WriteLine("Please, insert the date this habit was done:");
+            Console.Write("Year: ");
+            string? year = Console.ReadLine();
 
-        return (quantity, year, month, day);
+            Console.Write("Month (1-12): ");
+            string? month = Console.ReadLine();
+
+            Console.Write("Day: ");
+            string? day = Console.ReadLine();
+
+            return (quantity, year, month, day);
+        }
     }
 
     internal (string?, string?, string?) InsertNewHabitPrompt()
@@ -142,6 +157,14 @@ internal class HabitInterface
     {
         Console.Clear();
         Console.WriteLine($"The inserted {input} is invalid, please try again.");
+        Console.WriteLine("Press Enter to continue...");
+        Console.ReadLine();
+    }
+
+    internal void SuccessPrompt(string input)
+    {
+        Console.Clear();
+        Console.WriteLine($"The habit log was {input} successfully!");
         Console.WriteLine("Press Enter to continue...");
         Console.ReadLine();
     }
