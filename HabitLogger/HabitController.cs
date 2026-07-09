@@ -44,10 +44,16 @@ internal class HabitController
     {
         var logsRead = ReadHabitLogs(onlyRead: false);
 
-        var logSelected = logsRead.Item1;
-        var logs = logsRead.Item2;
-
-        databaseFunctions.DeleteHabitLog(id: logs[logSelected].Item1);
+        if (logsRead.Item2.Count == 0)
+        {
+            return;
+        }
+        else
+        {
+            var logSelected = logsRead.Item1;
+            var logs = logsRead.Item2;
+            databaseFunctions.DeleteHabitLog(id: logs[logSelected].Item1);
+        }
     }
 
     internal (int, List<(int, string, double, bool, DateTime)>) ReadHabitLogs(bool onlyRead)
@@ -82,6 +88,11 @@ internal class HabitController
         if (!isInsert)
         {
             logsRead = ReadHabitLogs(onlyRead: false);
+
+            if (logsRead.Item2.Count == 0)
+            {
+                return;
+            }
         }
 
         var habitLogData = habitInterface.InsertUpdateHabitLogPrompt();

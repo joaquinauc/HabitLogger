@@ -6,4 +6,11 @@ HabitInterface habitInterface = new();
 databaseFunctions.CreateTable("habit");
 databaseFunctions.CreateTable("habit_log");
 
-habitInterface.MainMenu();
+do
+{
+    bool exit = habitInterface.MainMenu();
+    if (exit)
+    {
+        break;
+    }
+} while (true);

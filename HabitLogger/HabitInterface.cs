@@ -6,7 +6,7 @@ namespace HabbitLogger;
 
 internal class HabitInterface
 {
-    internal void MainMenu()
+    internal bool MainMenu()
     {
         Console.Clear();
 
@@ -37,8 +37,10 @@ internal class HabitInterface
                 break;
 
             default:
-                break;
+                return true;
         }
+
+        return false;
     }
 
     internal (string?, string?, string?, string?) InsertUpdateHabitLogPrompt()
@@ -87,7 +89,7 @@ internal class HabitInterface
 
         if (logs.Count > 0)
         {
-            Table logsTable = new Table();
+            Table logsTable = new();
 
             logsTable.AddColumn("ID");
             logsTable.AddColumn("Name");
@@ -95,7 +97,7 @@ internal class HabitInterface
             logsTable.AddColumn("Goal");
             logsTable.AddColumn("Date");
 
-            for (int i = 0; i < logs.Count(); i++)
+            for (int i = 0; i < logs.Count; i++)
             {
                 logsTable.AddRow((i + 1).ToString(), logs[i].Item2, logs[i].Item3.ToString("F2"), logs[i].Item4 ? "[green]OK[/]" : "[red]X[/]", logs[i].Item5.ToString("yyyy-MM-dd"));
             }
@@ -109,11 +111,17 @@ internal class HabitInterface
                 {
                     logToUpdate = AnsiConsole.Ask<int>("Choose an ID for the log you want to update [yellow](0 < x < quantityOfLogs)[/]: ");
                 } while (logToUpdate <= 0 || logToUpdate > logs.Count);
+            } else
+            {
+                Console.WriteLine("Press Enter to continue...");
+                Console.ReadLine();
             }
         }
         else
         {
             Console.WriteLine("There's no logs registered in this habit!");
+            Console.WriteLine("Press Enter to continue...");
+            Console.ReadLine();
         }
 
         return logToUpdate - 1;
