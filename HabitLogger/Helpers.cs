@@ -48,7 +48,7 @@ namespace HabitLogger
             {
                 return isDateInvalid;
             }
-            else if (day <= daysEachMonth[month - 1] && (month <= 12 && month >= 1) && (year <= 9999 && year >= 0))
+            else if (day <= daysEachMonth[month - 1] && (month <= 12 && month >= 1) && (year <= 9999 && year >= 0) && !(day == 0 || month == 0 || year == 0))
             {
                 isDateInvalid = false;
             }

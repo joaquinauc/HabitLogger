@@ -127,7 +127,7 @@ internal class HabitController
             return;
         }
 
-        if (yearParsed == 0 || monthParsed == 0 || dayParsed == 0 || helpers.InvalidDateCheck(year: yearParsed, month: monthParsed, day: dayParsed, helpers.LeapYear(year: yearParsed)))
+        if (helpers.InvalidDateCheck(year: yearParsed, month: monthParsed, day: dayParsed, helpers.LeapYear(year: yearParsed)))
         {
             habitInterface.InvalidInputPrompt(input: "date");
         }
