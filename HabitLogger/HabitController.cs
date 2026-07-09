@@ -36,16 +36,12 @@ internal class HabitController
         else
         {
             InsertUpdateHabitLog(name: habitSelected, isInsert: true);
-
-            habitInterface.SuccessPrompt(input: "inserted");
         }
     }
 
     internal void UpdateHabitLog()
     {
         InsertUpdateHabitLog(name: "", isInsert: false);
-
-        habitInterface.SuccessPrompt(input: "updated");
     }
 
     internal void DeleteHabitLog()
@@ -141,6 +137,8 @@ internal class HabitController
             {
                 databaseFunctions.InsertHabitLog(name: name, quantity: quantityParsed, goalAchieved: helpers.GoalAchieved(quantityGoal: helpers.GetQuantityGoal(habitName: name), quantity: quantityParsed),
                     date: helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+
+                habitInterface.SuccessPrompt(input: "inserted");
             }
             else
             {
@@ -149,6 +147,8 @@ internal class HabitController
 
                 databaseFunctions.UpdateHabitLog(id: logs[logSelected].Item1, quantity: quantityParsed, goalAchieved: helpers.GoalAchieved(quantityGoal: helpers.GetQuantityGoal(habitName: logs[logSelected].Item2),
                     quantity: quantityParsed), date: helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+
+                habitInterface.SuccessPrompt(input: "updated");
             }
         }
     }
