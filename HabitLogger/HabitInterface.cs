@@ -48,7 +48,7 @@ internal class HabitInterface
         Console.Clear();
 
         Console.Write("Insert the quantity you achieved of this habit: ");
-        string quantity = Console.ReadLine();
+        string? quantity = Console.ReadLine();
 
         Console.Clear();
 

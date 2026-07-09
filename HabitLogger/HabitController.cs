@@ -29,6 +29,10 @@ internal class HabitController
                 databaseFunctions.InsertHabitType(name: name, quantityGoal: quantity, unit: unit);
             }
         }
+        else if (habitSelected == "---- RETURN TO MENU ----")
+        {
+            return;
+        }
         else
         {
             InsertUpdateHabitLog(name: habitSelected, isInsert: true);
@@ -59,6 +63,12 @@ internal class HabitController
     internal (int, List<(int, string, double, bool, DateTime)>) ReadHabitLogs(bool onlyRead)
     {
         string habitSelected = SelectHabit(isInsert: false);
+
+        if (habitSelected == "---- RETURN TO MENU ----")
+        {
+            return (0, []);
+        }
+
         List<(int, string, double, bool, DateTime)> logs = databaseFunctions.ReadHabitLogs(habit: habitSelected);
         int logToUpdate = habitInterface.ShowHabitLogsTable(onlyRead: onlyRead, logs: logs);
 
@@ -75,6 +85,7 @@ internal class HabitController
         }
 
         habits.AddRange(databaseFunctions.ReadHabits(column: "name"));
+        habits.Add("---- RETURN TO MENU ----");
 
         string habitSelected = habitInterface.SelectHabitPrompt(habits: habits);
 
