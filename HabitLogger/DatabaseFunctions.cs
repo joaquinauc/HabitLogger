@@ -31,7 +31,7 @@ internal class DatabaseFunctions
                     $@"
                         CREATE TABLE {table_name} (
                             id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                            name TEXT NOT NULL,
+                            name TEXT NOT NULL UNIQUE,
                             quantity_goal DOUBLE NOT NULL,
                             unit TEXT NOT NULL
                         );
