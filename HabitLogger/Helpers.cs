@@ -5,6 +5,8 @@ namespace HabitLogger
 {
     internal class Helpers
     {
+        DatabaseFunctions databaseFunctions = new();
+
         internal bool LeapYear(int year)
         {
             bool isLeapYear;
@@ -104,6 +106,48 @@ namespace HabitLogger
                 return true;
             else
                 return false;
+        }
+
+        internal void GenerateDatabase()
+        {
+            List<string> tables = databaseFunctions.CreateTable("habit");
+            databaseFunctions.CreateTable("habit_log");
+
+            if (tables.Count == 0)
+            {
+                GenerateSampleData();
+            }
+        }
+
+        internal void GenerateSampleData()
+        {
+            List<(string, double, string)> sampleHabits = new()
+            {
+                ("Exercise", 30, "minutes"),
+                ("Read", 20, "pages"),
+                ("Meditate", 15, "minutes"),
+                ("Drink Water", 8, "glasses"),
+                ("Sleep", 8, "hours")
+            };
+
+            List<int> sampleMaxQuantity = new() { 60, 100, 30, 12, 12 };
+
+            foreach (var sample in sampleHabits)
+            {
+                databaseFunctions.InsertHabitType(sample.Item1, sample.Item2, sample.Item3);
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 20; j++)
+                {
+                    int quantity = new Random().Next(0, sampleMaxQuantity[i] + 1);
+                    bool goalAchieved = GoalAchieved(sampleHabits[i].Item2, quantity);
+                    DateTime date = FormatDate(new Random().Next(2020, 2027), new Random().Next(1, 13), new Random().Next(1, 29));
+
+                    databaseFunctions.InsertHabitLog(name: sampleHabits[i].Item1, quantity: quantity, goalAchieved: goalAchieved, date);
+                }
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ namespace HabbitLogger;
 
 internal class DatabaseFunctions
 {
-    internal void CreateTable(string table_name)
+    internal List<string> CreateTable(string table_name)
     {
         List<string> tables = new();
 
@@ -54,6 +54,8 @@ internal class DatabaseFunctions
                 command.ExecuteNonQuery();
             }
         }
+
+        return tables;
     }
 
     internal void InsertHabitLog(string name, double quantity, bool goalAchieved, DateTime date)
