@@ -81,7 +81,7 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void InsertHabitType(string name, double quantityGoal, string unit) // Que este metodo tenga parametros con los valores que se van a agregar a la base de datos
+    internal void InsertHabitType(string name, double quantityGoal, string unit)
     {
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {

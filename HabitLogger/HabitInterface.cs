@@ -168,4 +168,12 @@ internal class HabitInterface
         Console.WriteLine("Press Enter to continue...");
         Console.ReadLine();
     }
+
+    internal void HabitAlreadyExistsPrompt(string input)
+    {
+        Console.Clear();
+        Console.WriteLine($"The habit '{input}' already exists!");
+        Console.WriteLine("Press Enter to continue...");
+        Console.ReadLine();
+    }
 }

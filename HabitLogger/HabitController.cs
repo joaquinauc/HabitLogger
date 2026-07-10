@@ -24,6 +24,10 @@ internal class HabitController
             {
                 habitInterface.InvalidInputPrompt(input: "data");
             }
+            else if (helpers.CheckIfHabitExists(name: name))
+            {
+                habitInterface.HabitAlreadyExistsPrompt(input: name);
+            }
             else
             {
                 databaseFunctions.InsertHabitType(name: name, quantityGoal: quantity, unit: unit);

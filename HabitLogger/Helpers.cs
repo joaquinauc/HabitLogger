@@ -149,5 +149,19 @@ namespace HabitLogger
                 }
             }
         }
+
+        internal bool CheckIfHabitExists(string name)
+        {
+            List<string> habits = databaseFunctions.ReadHabits("name");
+
+            if (habits.Contains(name))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
