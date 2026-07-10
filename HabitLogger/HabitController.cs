@@ -26,7 +26,7 @@ internal class HabitController
             }
             else if (helpers.CheckIfHabitExists(name: name))
             {
-                habitInterface.HabitAlreadyExistsPrompt(input: name);
+                habitInterface.HabitAlreadyExistsPrompt(input: name); // Falta hacerlo case insensitive
             }
             else
             {
