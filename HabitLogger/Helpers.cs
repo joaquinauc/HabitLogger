@@ -163,5 +163,13 @@ namespace HabitLogger
                 return false;
             }
         }
+
+        internal string Capitalize(string texto)
+        {
+            if (string.IsNullOrEmpty(texto))
+                return texto;
+
+            return char.ToUpper(texto[0]) + texto.Substring(1);
+        }
     }
 }

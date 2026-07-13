@@ -1,4 +1,5 @@
 ﻿using HabbitLogger;
+using System.Globalization;
 
 namespace HabitLogger;
 
@@ -20,13 +21,16 @@ internal class HabitController
             string? quantityGoal = newHabitData.Item2;
             string? unit = newHabitData.Item3;
 
+            name = name.ToLower();
+            name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(name);
+
             if (!double.TryParse(quantityGoal, out double quantity) || name == "" || unit == "")
             {
                 habitInterface.InvalidInputPrompt(input: "data");
             }
             else if (helpers.CheckIfHabitExists(name: name))
             {
-                habitInterface.HabitAlreadyExistsPrompt(input: name); // Falta hacerlo case insensitive
+                habitInterface.HabitAlreadyExistsPrompt(input: name);
             }
             else
             {
