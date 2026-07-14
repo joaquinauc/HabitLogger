@@ -139,7 +139,7 @@ namespace HabitLogger
                 {
                     int quantity = new Random().Next(0, sampleMaxQuantity[i] + 1);
                     bool goalAchieved = GoalAchieved(sampleHabits[i].Item2, quantity);
-                    DateTime date = FormatDate(new Random().Next(2020, 2027), new Random().Next(1, 13), new Random().Next(1, 29));
+                    DateTime date = FormatDate(new Random().Next(2020, 2026), new Random().Next(1, 13), new Random().Next(1, 29));
 
                     DatabaseFunctions.InsertHabitLog(name: sampleHabits[i].Item1, quantity: quantity, goalAchieved: goalAchieved, date);
                 }
