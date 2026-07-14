@@ -6,6 +6,11 @@ internal class DatabaseFunctions
 {
     internal List<string> CreateTable(string table_name)
     {
+        var validTables = new[] { "habit", "habit_log" };
+
+        if (!validTables.Contains(table_name))
+            throw new ArgumentException($"Invalid table: {table_name}");
+
         List<string> tables = new();
 
         using (var connection = new SqliteConnection($"Data Source='habit_logger.db'"))
@@ -151,6 +156,11 @@ internal class DatabaseFunctions
 
     internal List<string> ReadHabits(string column)
     {
+        var validColumns = new[] { "name", "quantity_goal", "unit" };
+
+        if (!validColumns.Contains(column))
+            throw new ArgumentException($"Invalid column: {column}");
+
         List<string> habits = new();
 
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
