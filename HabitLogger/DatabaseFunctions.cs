@@ -2,9 +2,9 @@
 
 namespace HabbitLogger;
 
-internal class DatabaseFunctions
+internal static class DatabaseFunctions
 {
-    internal List<string> CreateTable(string table_name)
+    internal static List<string> CreateTable(string table_name)
     {
         var validTables = new[] { "habit", "habit_log" };
 
@@ -63,7 +63,7 @@ internal class DatabaseFunctions
         return tables;
     }
 
-    internal void InsertHabitLog(string name, double quantity, bool goalAchieved, DateTime date)
+    internal static void InsertHabitLog(string name, double quantity, bool goalAchieved, DateTime date)
     {
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
@@ -86,7 +86,7 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void InsertHabitType(string name, double quantityGoal, string unit)
+    internal static void InsertHabitType(string name, double quantityGoal, string unit)
     {
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
@@ -108,7 +108,7 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void UpdateHabitLog(int id, double quantity, bool goalAchieved, DateTime date)
+    internal static void UpdateHabitLog(int id, double quantity, bool goalAchieved, DateTime date)
     {
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
@@ -134,7 +134,7 @@ internal class DatabaseFunctions
         }
     }
 
-    internal void DeleteHabitLog(int id)
+    internal static void DeleteHabitLog(int id)
     {
         using (var connection = new SqliteConnection("Data Source=habit_logger.db"))
         {
@@ -154,7 +154,7 @@ internal class DatabaseFunctions
         }
     }
 
-    internal List<string> ReadHabits(string column)
+    internal static List<string> ReadHabits(string column)
     {
         var validColumns = new[] { "name", "quantity_goal", "unit" };
 
@@ -183,7 +183,7 @@ internal class DatabaseFunctions
         return habits;
     }
 
-    internal List<(int, string, double, bool, DateTime)> ReadHabitLogs(string habit)
+    internal static List<(int, string, double, bool, DateTime)> ReadHabitLogs(string habit)
     {
         List<(int, string, double, bool, DateTime)> logs = new();
 

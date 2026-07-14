@@ -5,9 +5,7 @@ namespace HabitLogger;
 
 internal class HabitController
 {
-    private readonly DatabaseFunctions databaseFunctions = new();
     private readonly HabitInterface habitInterface = new();
-    private readonly Helpers helpers = new();
 
     internal void InsertHabitLog()
     {
@@ -28,13 +26,13 @@ internal class HabitController
             {
                 habitInterface.InvalidInputPrompt(input: "data");
             }
-            else if (helpers.CheckIfHabitExists(name: name))
+            else if (Helpers.CheckIfHabitExists(name: name))
             {
                 habitInterface.HabitAlreadyExistsPrompt(input: name);
             }
             else
             {
-                databaseFunctions.InsertHabitType(name: name, quantityGoal: quantity, unit: unit);
+                DatabaseFunctions.InsertHabitType(name: name, quantityGoal: quantity, unit: unit);
             }
         }
         else if (habitSelected == "---- RETURN TO MENU ----")
@@ -65,7 +63,7 @@ internal class HabitController
             var logSelected = logsRead.Item1;
             var logs = logsRead.Item2;
 
-            databaseFunctions.DeleteHabitLog(id: logs[logSelected].Item1);
+            DatabaseFunctions.DeleteHabitLog(id: logs[logSelected].Item1);
 
             habitInterface.SuccessPrompt(input: "deleted");
         }
@@ -80,7 +78,7 @@ internal class HabitController
             return (0, []);
         }
 
-        List<(int, string, double, bool, DateTime)> logs = databaseFunctions.ReadHabitLogs(habit: habitSelected);
+        List<(int, string, double, bool, DateTime)> logs = DatabaseFunctions.ReadHabitLogs(habit: habitSelected);
         int logToUpdate = habitInterface.ShowHabitLogsTable(onlyRead: onlyRead, logs: logs);
 
         return (logToUpdate, logs);
@@ -95,7 +93,7 @@ internal class HabitController
             habits.Add("Insert new habit type");
         }
 
-        habits.AddRange(databaseFunctions.ReadHabits(column: "name"));
+        habits.AddRange(DatabaseFunctions.ReadHabits(column: "name"));
         habits.Add("---- RETURN TO MENU ----");
 
         string habitSelected = habitInterface.SelectHabitPrompt(habits: habits);
@@ -135,7 +133,7 @@ internal class HabitController
             return;
         }
 
-        if (helpers.InvalidDateCheck(year: yearParsed, month: monthParsed, day: dayParsed, helpers.LeapYear(year: yearParsed)))
+        if (Helpers.InvalidDateCheck(year: yearParsed, month: monthParsed, day: dayParsed, Helpers.LeapYear(year: yearParsed)))
         {
             habitInterface.InvalidInputPrompt(input: "date");
         }
@@ -143,8 +141,8 @@ internal class HabitController
         {
             if (isInsert)
             {
-                databaseFunctions.InsertHabitLog(name: name, quantity: quantityParsed, goalAchieved: helpers.GoalAchieved(quantityGoal: helpers.GetQuantityGoal(habitName: name), quantity: quantityParsed),
-                    date: helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+                DatabaseFunctions.InsertHabitLog(name: name, quantity: quantityParsed, goalAchieved: Helpers.GoalAchieved(quantityGoal: Helpers.GetQuantityGoal(habitName: name), quantity: quantityParsed),
+                    date: Helpers.FormatDate(yearParsed, monthParsed, dayParsed));
 
                 habitInterface.SuccessPrompt(input: "inserted");
             }
@@ -153,8 +151,8 @@ internal class HabitController
                 var logSelected = logsRead.Item1;
                 var logs = logsRead.Item2;
 
-                databaseFunctions.UpdateHabitLog(id: logs[logSelected].Item1, quantity: quantityParsed, goalAchieved: helpers.GoalAchieved(quantityGoal: helpers.GetQuantityGoal(habitName: logs[logSelected].Item2),
-                    quantity: quantityParsed), date: helpers.FormatDate(yearParsed, monthParsed, dayParsed));
+                DatabaseFunctions.UpdateHabitLog(id: logs[logSelected].Item1, quantity: quantityParsed, goalAchieved: Helpers.GoalAchieved(quantityGoal: Helpers.GetQuantityGoal(habitName: logs[logSelected].Item2),
+                    quantity: quantityParsed), date: Helpers.FormatDate(yearParsed, monthParsed, dayParsed));
 
                 habitInterface.SuccessPrompt(input: "updated");
             }

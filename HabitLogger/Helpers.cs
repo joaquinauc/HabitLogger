@@ -3,11 +3,9 @@ using System.Globalization;
 
 namespace HabitLogger
 {
-    internal class Helpers
+    internal static class Helpers
     {
-        DatabaseFunctions databaseFunctions = new();
-
-        internal bool LeapYear(int year)
+        internal static bool LeapYear(int year)
         {
             bool isLeapYear;
 
@@ -35,7 +33,7 @@ namespace HabitLogger
             return isLeapYear;
         }
 
-        internal bool InvalidDateCheck(int year, int month, int day, bool leapYear)
+        internal static bool InvalidDateCheck(int year, int month, int day, bool leapYear)
         {
             bool isDateInvalid = true;
 
@@ -58,18 +56,16 @@ namespace HabitLogger
             return isDateInvalid;
         }
 
-        internal double GetQuantityGoal(string habitName)
+        internal static double GetQuantityGoal(string habitName)
         {
-            DatabaseFunctions databaseFunctions = new();
+            int habitIndex = DatabaseFunctions.ReadHabits("name").IndexOf(habitName);
 
-            int habitIndex = databaseFunctions.ReadHabits("name").IndexOf(habitName);
-
-            double.TryParse(databaseFunctions.ReadHabits("quantity_goal")[habitIndex], out double quantityGoal);
+            double.TryParse(DatabaseFunctions.ReadHabits("quantity_goal")[habitIndex], out double quantityGoal);
 
             return quantityGoal;
         }
 
-        internal DateTime FormatDate(int year, int month, int day)
+        internal static DateTime FormatDate(int year, int month, int day)
         {
             string formattedYear = $"{year}";
             string formattedMonth = $"{month}";
@@ -100,7 +96,7 @@ namespace HabitLogger
             return date;
         }
 
-        internal bool GoalAchieved(double quantityGoal, double quantity)
+        internal static bool GoalAchieved(double quantityGoal, double quantity)
         {
             if (quantity >= quantityGoal)
                 return true;
@@ -108,10 +104,10 @@ namespace HabitLogger
                 return false;
         }
 
-        internal void GenerateDatabase()
+        internal static void GenerateDatabase()
         {
-            List<string> tables = databaseFunctions.CreateTable("habit");
-            databaseFunctions.CreateTable("habit_log");
+            List<string> tables = DatabaseFunctions.CreateTable("habit");
+            DatabaseFunctions.CreateTable("habit_log");
 
             if (tables.Count == 0)
             {
@@ -119,7 +115,7 @@ namespace HabitLogger
             }
         }
 
-        internal void GenerateSampleData()
+        internal static void GenerateSampleData()
         {
             List<(string, double, string)> sampleHabits = new()
             {
@@ -134,7 +130,7 @@ namespace HabitLogger
 
             foreach (var sample in sampleHabits)
             {
-                databaseFunctions.InsertHabitType(sample.Item1, sample.Item2, sample.Item3);
+                DatabaseFunctions.InsertHabitType(sample.Item1, sample.Item2, sample.Item3);
             }
 
             for (int i = 0; i < 5; i++)
@@ -145,14 +141,14 @@ namespace HabitLogger
                     bool goalAchieved = GoalAchieved(sampleHabits[i].Item2, quantity);
                     DateTime date = FormatDate(new Random().Next(2020, 2027), new Random().Next(1, 13), new Random().Next(1, 29));
 
-                    databaseFunctions.InsertHabitLog(name: sampleHabits[i].Item1, quantity: quantity, goalAchieved: goalAchieved, date);
+                    DatabaseFunctions.InsertHabitLog(name: sampleHabits[i].Item1, quantity: quantity, goalAchieved: goalAchieved, date);
                 }
             }
         }
 
-        internal bool CheckIfHabitExists(string name)
+        internal static bool CheckIfHabitExists(string name)
         {
-            List<string> habits = databaseFunctions.ReadHabits("name");
+            List<string> habits = DatabaseFunctions.ReadHabits("name");
 
             if (habits.Contains(name))
             {

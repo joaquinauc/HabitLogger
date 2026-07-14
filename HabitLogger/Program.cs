@@ -2,9 +2,8 @@
 using HabitLogger;
 
 HabitInterface habitInterface = new();
-Helpers helpers = new();
 
-helpers.GenerateDatabase();
+Helpers.GenerateDatabase();
 
 do
 {
