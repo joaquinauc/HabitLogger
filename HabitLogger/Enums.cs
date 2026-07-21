@@ -1,4 +1,4 @@
-﻿namespace HabbitLogger;
+﻿namespace HabitLogger;
 
 internal class Enums
 {

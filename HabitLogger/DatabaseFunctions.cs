@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace HabbitLogger;
+namespace HabitLogger;
 
 internal static class DatabaseFunctions
 {

@@ -1,11 +1,10 @@
-﻿using HabbitLogger;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace HabitLogger
 {
-    internal static class Helpers
+    public static class Helpers
     {
-        internal static bool LeapYear(int year)
+        public static bool LeapYear(int year)
         {
             bool isLeapYear;
 
@@ -33,7 +32,7 @@ namespace HabitLogger
             return isLeapYear;
         }
 
-        internal static bool InvalidDateCheck(int year, int month, int day, bool leapYear)
+        public static bool InvalidDateCheck(int year, int month, int day, bool leapYear)
         {
             bool isDateInvalid = true;
 
@@ -56,7 +55,7 @@ namespace HabitLogger
             return isDateInvalid;
         }
 
-        internal static double GetQuantityGoal(string habitName)
+        public static double GetQuantityGoal(string habitName)
         {
             int habitIndex = DatabaseFunctions.ReadHabits("name").IndexOf(habitName);
 
@@ -65,7 +64,7 @@ namespace HabitLogger
             return quantityGoal;
         }
 
-        internal static DateTime FormatDate(int year, int month, int day)
+        public static DateTime FormatDate(int year, int month, int day)
         {
             string formattedYear = $"{year}";
             string formattedMonth = $"{month}";
@@ -96,7 +95,7 @@ namespace HabitLogger
             return date;
         }
 
-        internal static bool GoalAchieved(double quantityGoal, double quantity)
+        public static bool GoalAchieved(double quantityGoal, double quantity)
         {
             if (quantity >= quantityGoal)
                 return true;
@@ -104,7 +103,7 @@ namespace HabitLogger
                 return false;
         }
 
-        internal static void GenerateDatabase()
+        public static void GenerateDatabase()
         {
             List<string> tables = DatabaseFunctions.CreateTable("habit");
             DatabaseFunctions.CreateTable("habit_log");
@@ -115,7 +114,7 @@ namespace HabitLogger
             }
         }
 
-        internal static void GenerateSampleData()
+        public static void GenerateSampleData()
         {
             List<(string, double, string)> sampleHabits = new()
             {
@@ -146,7 +145,7 @@ namespace HabitLogger
             }
         }
 
-        internal static bool CheckIfHabitExists(string name)
+        public static bool CheckIfHabitExists(string name)
         {
             List<string> habits = DatabaseFunctions.ReadHabits("name");
 

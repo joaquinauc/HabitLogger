@@ -1,5 +1,4 @@
-﻿using HabbitLogger;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace HabitLogger;
 

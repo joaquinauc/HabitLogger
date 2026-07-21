@@ -1,8 +1,7 @@
-﻿using HabitLogger;
-using Spectre.Console;
-using static HabbitLogger.Enums;
+﻿using Spectre.Console;
+using static HabitLogger.Enums;
 
-namespace HabbitLogger;
+namespace HabitLogger;
 
 internal class HabitInterface
 {

@@ -1,5 +1,4 @@
-﻿using HabbitLogger;
-using HabitLogger;
+﻿using HabitLogger;
 
 HabitInterface habitInterface = new();
 
